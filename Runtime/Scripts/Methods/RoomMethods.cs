@@ -5,6 +5,7 @@ namespace AsyncGameServer
 
     public static class RoomMethods
     {
+
         public static Promise<Room> CreateRoom(int user_id)
         {
             Promise<Room> promise = new Promise<Room>();
@@ -33,6 +34,25 @@ namespace AsyncGameServer
                 {
                     new AsyncHttpClient.QueryParam("user_id", userID),
                     new AsyncHttpClient.QueryParam("room_id", roomID)
+                }, room =>
+                {
+                    promise.ResolveHandler(room);
+                }, message =>
+                {
+                    promise.ErrorHandler(message);
+                });
+
+            return promise;
+        }
+
+        public static Promise<Room> CreateOrJoinRoom(int user_id)
+        {
+            Promise<Room> promise = new Promise<Room>();
+
+            AsyncConnector.HttpClient.Get<Room>("rooms/create_or_join_room",
+                new[]
+                {
+                    new AsyncHttpClient.QueryParam("user_id", user_id)
                 }, room =>
                 {
                     promise.ResolveHandler(room);
@@ -158,6 +178,7 @@ namespace AsyncGameServer
 
             return promise;
         }
+
     }
 
 }

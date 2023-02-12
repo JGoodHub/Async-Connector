@@ -8,8 +8,10 @@ namespace AsyncGameServer
     [Serializable]
     public class Room
     {
+
         public enum RoomStatus
         {
+
             CREATED,
             WAITING_FOR_OPPONENT,
             ACTIVE,
@@ -17,6 +19,7 @@ namespace AsyncGameServer
             PLAYER_TWO_LEFT,
             CLOSED,
             EXPIRED
+
         }
 
         [JsonProperty("room_id")] public int RoomID;
@@ -33,25 +36,43 @@ namespace AsyncGameServer
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
+
     }
 
     [Serializable]
     public class RoomUserData
     {
+
         [JsonProperty("user_id")] public int UserID;
         [JsonProperty("display_name")] public string DisplayName;
         [JsonProperty("public_user_state")] public string PublicUserDataJson;
+
     }
 
     [Serializable]
     public class Command
     {
+
         [JsonProperty("sender_user_id")] public int SenderUserID;
         [JsonProperty("command_type")] public string CommandType;
         [JsonProperty("timestamp")] public long Timestamp;
         [JsonProperty("data")] public string Data;
 
         public DateTime FormattedTimestamp => DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime;
+
+    }
+
+    public static class RoomExtensions
+    {
+
+        public static bool IsOurs(this Room room)
+        {
+            if (CorePlayerData.Instance == null)
+                return false;
+
+            return room.PrimaryUserData.UserID == CorePlayerData.Instance.UserID;
+        }
+
     }
 
 }

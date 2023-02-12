@@ -6,8 +6,8 @@ namespace AsyncGameServer
 {
 
     [Serializable]
-    [CreateAssetMenu(fileName = "DeviceUser", menuName = "Async Game Server/New Device User", order = 0)]
-    public class DeviceUser : ScriptableSingleton<DeviceUser>
+    [CreateAssetMenu(fileName = "CorePlayerData", menuName = "Async Game Server/New Core Player Data", order = 0)]
+    public class CorePlayerData : ScriptableSingleton<CorePlayerData>
     {
         [JsonProperty("user_id")] public int UserID;
         [JsonProperty("user_name")] public string UserName;
@@ -17,11 +17,11 @@ namespace AsyncGameServer
 
         public string DisplayName => $"{UserName}#{UserTag}";
 
-        public static Promise<DeviceUser> GetOrRegisterDeviceUser()
+        public static Promise<CorePlayerData> GetOrRegisterDeviceUser()
         {
-            Promise<DeviceUser> userPromise = new Promise<DeviceUser>();
+            Promise<CorePlayerData> userPromise = new Promise<CorePlayerData>();
 
-            DeviceUser user = GetCurrentDeviceUser();
+            CorePlayerData user = GetCurrentDeviceUser();
 
             if (user == null)
             {
@@ -56,7 +56,7 @@ namespace AsyncGameServer
             return userPromise;
         }
 
-        public void CopyTo(DeviceUser otherUser)
+        public void CopyTo(CorePlayerData otherUser)
         {
             otherUser.UserID = UserID;
             otherUser.UserName = UserName;
@@ -65,7 +65,7 @@ namespace AsyncGameServer
             otherUser.PublicUserDataJson = PublicUserDataJson;
         }
 
-        private static DeviceUser GetCurrentDeviceUser()
+        private static CorePlayerData GetCurrentDeviceUser()
         {
             if (PlayerPrefs.HasKey("device_user") == false)
                 return null;
@@ -88,9 +88,9 @@ namespace AsyncGameServer
             }
         }
 
-        private static Promise<DeviceUser> RegisterNewDeviceUser()
+        private static Promise<CorePlayerData> RegisterNewDeviceUser()
         {
-            Promise<DeviceUser> promise = new Promise<DeviceUser>();
+            Promise<CorePlayerData> promise = new Promise<CorePlayerData>();
 
             UserMethods.CreateGuestUser()
                 .Then(newUser =>

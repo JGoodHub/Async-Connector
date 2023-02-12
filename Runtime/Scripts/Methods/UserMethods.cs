@@ -3,11 +3,11 @@
 
     public static class UserMethods
     {
-        public static Promise<DeviceUser> CreateGuestUser()
+        public static Promise<CorePlayerData> CreateGuestUser()
         {
-            Promise<DeviceUser> promise = new Promise<DeviceUser>();
+            Promise<CorePlayerData> promise = new Promise<CorePlayerData>();
 
-            AsyncConnector.HttpClient.Get<DeviceUser>("users/create_user_guest", null, newUser =>
+            AsyncConnector.HttpClient.Get<CorePlayerData>("users/create_user_guest", null, newUser =>
             {
                 promise.ResolveHandler(newUser);
             }, (message) =>
@@ -18,11 +18,11 @@
             return promise;
         }
 
-        public static Promise<DeviceUser> GetUserByID(int userID)
+        public static Promise<CorePlayerData> GetUserByID(int userID)
         {
-            Promise<DeviceUser> promise = new Promise<DeviceUser>();
+            Promise<CorePlayerData> promise = new Promise<CorePlayerData>();
 
-            AsyncConnector.HttpClient.Get<DeviceUser>("users/get_user_by_id",
+            AsyncConnector.HttpClient.Get<CorePlayerData>("users/get_user_by_id",
                 new[]
                 {
                     new AsyncHttpClient.QueryParam("user_id", userID)
@@ -37,11 +37,11 @@
             return promise;
         }
 
-        public static Promise<DeviceUser[]> GetAllUsers(int userID)
+        public static Promise<CorePlayerData[]> GetAllUsers(int userID)
         {
-            Promise<DeviceUser[]> promise = new Promise<DeviceUser[]>();
+            Promise<CorePlayerData[]> promise = new Promise<CorePlayerData[]>();
 
-            AsyncConnector.HttpClient.Get<DeviceUser[]>("users/get_all_users", null,
+            AsyncConnector.HttpClient.Get<CorePlayerData[]>("users/get_all_users", null,
                 users =>
                 {
                     promise.ResolveHandler(users);

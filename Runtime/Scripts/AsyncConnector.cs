@@ -11,7 +11,7 @@ namespace AsyncGameServer
         private static ServerConfig _serverConfig;
         private static bool _connectionVerified;
         private static AsyncHttpClient _httpClient;
-        private static DeviceUser _user;
+        private static CorePlayerData _user;
 
         public static bool ConnectionVerified => _connectionVerified;
 
@@ -19,7 +19,7 @@ namespace AsyncGameServer
 
         public static bool LoggedIn => _user != null;
 
-        public static void Initialise()
+        public static void InitialiseAndLogin()
         {
             _serverConfig = ServerConfig.Instance;
 
@@ -38,7 +38,7 @@ namespace AsyncGameServer
 
         private static void Login()
         {
-            DeviceUser.GetOrRegisterDeviceUser()
+            CorePlayerData.GetOrRegisterDeviceUser()
                 .Then(user =>
                 {
                     _user = user;
