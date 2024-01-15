@@ -1,4 +1,6 @@
-﻿namespace AsyncGameServer
+﻿using Async.Connector.Models;
+
+namespace Async.Connector.Methods
 {
 
     public static class UserMethods

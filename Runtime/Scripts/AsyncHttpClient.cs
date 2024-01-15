@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace AsyncGameServer
+namespace Async.Connector
 {
 
     public class AsyncHttpClient
@@ -90,11 +90,11 @@ namespace AsyncGameServer
             HandleJsonResponse(request, successCallback, errorCallback);
         }
 
-        public async void Put<T>(string endpoint, QueryParam[] queryParams, string bodyJSON, Action<T> successCallback, Action<string> errorCallback = null) where T : class
+        public async void Put<T>(string endpoint, QueryParam[] queryParams, string bodyJson, Action<T> successCallback, Action<string> errorCallback = null) where T : class
         {
             string endpointUrl = ConstructURL(_serverConfig, endpoint, queryParams);
 
-            using UnityWebRequest request = UnityWebRequest.Put(endpointUrl, bodyJSON);
+            using UnityWebRequest request = UnityWebRequest.Put(endpointUrl, bodyJson);
 
             request.SetRequestHeader("Content-Type", "application/json");
 

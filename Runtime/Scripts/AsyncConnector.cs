@@ -1,17 +1,21 @@
 using System;
 using System.Threading.Tasks;
+using Async.Connector.Models;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace AsyncGameServer
+namespace Async.Connector
 {
 
     public static class AsyncConnector
     {
+
         private static ServerConfig _serverConfig;
-        private static bool _connectionVerified;
         private static AsyncHttpClient _httpClient;
         private static CorePlayerData _user;
+
+        private static bool _connectionVerified;
+        private static bool _offlineAllowed;
 
         public static bool ConnectionVerified => _connectionVerified;
 
@@ -19,25 +23,33 @@ namespace AsyncGameServer
 
         public static bool LoggedIn => _user != null;
 
-        public static void InitialiseAndLogin()
+        public static void InitialiseAndLogin(bool offlineAllowed)
         {
             _serverConfig = ServerConfig.Instance;
+
+            _offlineAllowed = offlineAllowed;
 
             VerifyServerConnection(verified =>
             {
                 _connectionVerified = verified;
 
-                if (verified)
-                {
-                    _httpClient = new AsyncHttpClient(_serverConfig);
+                if (verified == false && _offlineAllowed == false)
+                    return;
 
-                    Login();
-                }
+                _httpClient = new AsyncHttpClient(_serverConfig);
+
+                Login();
             });
         }
 
         private static void Login()
         {
+            if (_connectionVerified == false && _offlineAllowed)
+            {
+                _user = CorePlayerData.GetLocallyStoredDeviceUser();
+                return;
+            }
+
             CorePlayerData.GetOrRegisterDeviceUser()
                 .Then(user =>
                 {
@@ -71,6 +83,7 @@ namespace AsyncGameServer
                 callback?.Invoke(false);
             }
         }
+
     }
 
 }

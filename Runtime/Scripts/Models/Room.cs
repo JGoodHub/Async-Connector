@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace AsyncGameServer
+namespace Async.Connector.Models
 {
 
     [Serializable]
@@ -28,7 +29,7 @@ namespace AsyncGameServer
         [JsonProperty("primary_user_data")] public RoomUserData PrimaryUserData;
         [JsonProperty("secondary_user_data")] public RoomUserData SecondaryUserData;
 
-        [JsonProperty("commandInvocations")] public Command[] CommandInvocations;
+        [JsonProperty("commandInvocations")] public List<Command> CommandInvocations;
 
         public bool HasSecondUser => SecondaryUserData != null;
 
@@ -58,7 +59,20 @@ namespace AsyncGameServer
         [JsonProperty("timestamp")] public long Timestamp;
         [JsonProperty("data")] public string Data;
 
-        public DateTime FormattedTimestamp => DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime;
+        [JsonIgnore] public DateTime FormattedTimestamp => DateTimeOffset.FromUnixTimeMilliseconds(Timestamp).DateTime;
+
+        public Command(string commandType, string data)
+        {
+            SenderUserID = CorePlayerData.Instance.UserID;
+            CommandType = commandType;
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            Data = data;
+        }
+
+        public T Extract<T>()
+        {
+            return JsonConvert.DeserializeObject<T>(Data);
+        }
 
     }
 

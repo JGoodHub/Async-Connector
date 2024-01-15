@@ -1,14 +1,16 @@
 using System;
+using Async.Connector.Methods;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace AsyncGameServer
+namespace Async.Connector.Models
 {
 
     [Serializable]
     [CreateAssetMenu(fileName = "CorePlayerData", menuName = "Async Game Server/New Core Player Data", order = 0)]
     public class CorePlayerData : ScriptableSingleton<CorePlayerData>
     {
+
         [JsonProperty("user_id")] public int UserID;
         [JsonProperty("user_name")] public string UserName;
         [JsonProperty("user_tag")] public int UserTag;
@@ -21,7 +23,7 @@ namespace AsyncGameServer
         {
             Promise<CorePlayerData> userPromise = new Promise<CorePlayerData>();
 
-            CorePlayerData user = GetCurrentDeviceUser();
+            CorePlayerData user = GetLocallyStoredDeviceUser();
 
             if (user == null)
             {
@@ -40,16 +42,16 @@ namespace AsyncGameServer
                     })
                     .Catch(error =>
                     {
-                        if (error.StartsWith("404"))
-                        {
-                            Debug.LogError("Local user data found but no matching user was not found on server. Registering as new user.");
+                        if (error.StartsWith("404") == false)
+                            return;
 
-                            RegisterNewDeviceUser()
-                                .Then(newUser =>
-                                {
-                                    userPromise.ResolveHandler(newUser);
-                                });
-                        }
+                        Debug.LogError("Local user data found but no matching user was not found on server. Registering as new user.");
+
+                        RegisterNewDeviceUser()
+                            .Then(newUser =>
+                            {
+                                userPromise.ResolveHandler(newUser);
+                            });
                     });
             }
 
@@ -65,8 +67,10 @@ namespace AsyncGameServer
             otherUser.PublicUserDataJson = PublicUserDataJson;
         }
 
-        private static CorePlayerData GetCurrentDeviceUser()
+        public static CorePlayerData GetLocallyStoredDeviceUser()
         {
+            return Instance;
+            
             if (PlayerPrefs.HasKey("device_user") == false)
                 return null;
 
@@ -113,6 +117,16 @@ namespace AsyncGameServer
 
             return promise;
         }
+
+        [ContextMenu("Save To Player Prefs")]
+        public void SaveToPlayerPrefs()
+        {
+            string newUserJson = JsonConvert.SerializeObject(this);
+
+            PlayerPrefs.SetString("device_user", newUserJson);
+            PlayerPrefs.Save();
+        }
+
     }
 
 }

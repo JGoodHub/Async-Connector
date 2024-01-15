@@ -1,19 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using Async.Connector.Models;
+using Newtonsoft.Json;
 
-namespace AsyncGameServer
+namespace Async.Connector.Methods
 {
 
     public static class RoomMethods
     {
 
-        public static Promise<Room> CreateRoom(int user_id)
+        public static Promise<Room> CreateRoom(int userID)
         {
             Promise<Room> promise = new Promise<Room>();
 
             AsyncConnector.HttpClient.Get<Room>("rooms/create_room",
                 new[]
                 {
-                    new AsyncHttpClient.QueryParam("user_id", user_id)
+                    new AsyncHttpClient.QueryParam("user_id", userID)
                 }, room =>
                 {
                     promise.ResolveHandler(room);
@@ -45,14 +46,14 @@ namespace AsyncGameServer
             return promise;
         }
 
-        public static Promise<Room> CreateOrJoinRoom(int user_id)
+        public static Promise<Room> CreateOrJoinRoom(int userID)
         {
             Promise<Room> promise = new Promise<Room>();
 
             AsyncConnector.HttpClient.Get<Room>("rooms/create_or_join_room",
                 new[]
                 {
-                    new AsyncHttpClient.QueryParam("user_id", user_id)
+                    new AsyncHttpClient.QueryParam("user_id", userID)
                 }, room =>
                 {
                     promise.ResolveHandler(room);
@@ -161,13 +162,13 @@ namespace AsyncGameServer
         {
             Promise<Room> promise = new Promise<Room>();
 
-            string commandJSON = JsonConvert.SerializeObject(command, Formatting.Indented);
+            string commandJson = JsonConvert.SerializeObject(command, Formatting.Indented);
 
             AsyncConnector.HttpClient.Put<Room>("rooms/send_command_to_room",
                 new[]
                 {
                     new AsyncHttpClient.QueryParam("room_id", roomID)
-                }, commandJSON,
+                }, commandJson,
                 usersRooms =>
                 {
                     promise.ResolveHandler(usersRooms);

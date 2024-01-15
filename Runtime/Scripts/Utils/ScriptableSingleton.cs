@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace AsyncGameServer
+namespace Async.Connector
 {
 
     public class ScriptableSingleton<T> : ScriptableObject where T : class

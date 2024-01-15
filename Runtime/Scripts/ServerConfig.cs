@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AsyncGameServer
+namespace Async.Connector
 {
 
     [CreateAssetMenu(fileName = "ServerConfig", menuName = "Async Game Server/New Server Config", order = 0)]
