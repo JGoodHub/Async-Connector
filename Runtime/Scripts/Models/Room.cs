@@ -63,7 +63,7 @@ namespace Async.Connector.Models
 
         public Command(string commandType, string data)
         {
-            SenderUserID = CorePlayerData.Instance.UserID;
+            SenderUserID = CorePlayerData.Singleton.UserID;
             CommandType = commandType;
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             Data = data;
@@ -81,10 +81,10 @@ namespace Async.Connector.Models
 
         public static bool IsOurs(this Room room)
         {
-            if (CorePlayerData.Instance == null)
+            if (CorePlayerData.Singleton == null)
                 return false;
 
-            return room.PrimaryUserData.UserID == CorePlayerData.Instance.UserID;
+            return room.PrimaryUserData.UserID == CorePlayerData.Singleton.UserID;
         }
 
     }

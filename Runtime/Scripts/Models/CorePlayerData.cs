@@ -69,7 +69,7 @@ namespace Async.Connector.Models
 
         public static CorePlayerData GetLocallyStoredDeviceUser()
         {
-            return Instance;
+            return Singleton;
             
             if (PlayerPrefs.HasKey("device_user") == false)
                 return null;
@@ -78,11 +78,11 @@ namespace Async.Connector.Models
 
             try
             {
-                JsonConvert.PopulateObject(existingUserJson, Instance);
+                JsonConvert.PopulateObject(existingUserJson, Singleton);
 
-                Debug.Log($"Loaded user for this device {Instance.DisplayName}");
+                Debug.Log($"Loaded user for this device {Singleton.DisplayName}");
 
-                return Instance;
+                return Singleton;
             }
             catch (JsonException exception)
             {
@@ -104,7 +104,7 @@ namespace Async.Connector.Models
                     PlayerPrefs.SetString("device_user", newUserJson);
                     PlayerPrefs.Save();
 
-                    JsonConvert.PopulateObject(newUserJson, Instance);
+                    JsonConvert.PopulateObject(newUserJson, Singleton);
 
                     Debug.Log($"Registered new user for this device {newUser.DisplayName}");
 

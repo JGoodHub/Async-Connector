@@ -25,7 +25,7 @@ namespace Async.Connector
 
         public static void InitialiseAndLogin(bool offlineAllowed)
         {
-            _serverConfig = ServerConfig.Instance;
+            _serverConfig = ServerConfig.Singleton;
 
             _offlineAllowed = offlineAllowed;
 
