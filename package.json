@@ -1,5 +1,10 @@
 {
 	"name": "async.connector",
 	"version": "1.0.0",
-	"displayName": "Async Connector"
+	"displayName": "Async Connector",
+	"description": "",
+	"dependencies": 
+	{
+		"com.unity.nuget.newtonsoft-json": "3.2.1"
+	}
 }
